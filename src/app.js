@@ -1,6 +1,15 @@
-const express = require('express');
+import config from './config';
+import express from 'express';
+import productsRoutes from './routes/products.routes'
 
 const app = express();
+console.log(config);
 
-module.exports = app;
+// settings
+app.set('port', config.port);
+console.log(`puerto ${config.port}`);
+
+app.use(productsRoutes);
+
+export default app;
 

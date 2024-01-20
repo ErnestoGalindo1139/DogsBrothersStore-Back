@@ -1,11 +1,6 @@
-import './database/connection';
+import app from './app';
 import { getConnection } from './database/connection';
-const express = require('express');
-require('dotenv').config();
-
-
-// Crear el servidor de express
-const app = express();
+import express from 'express';
 
 // Directorio Publico
 app.use(express.static('public'));
@@ -13,10 +8,10 @@ app.use(express.static('public'));
 // Lectura y parseo del body
 app.use(express.json());
 
-// Rutas
-// TODO: auth // crear, login, renew
-app.use('/api/auth', require('./routes/auth'));
-// TODO: CRUD: Eventos
+// // Rutas
+// // TODO: auth // crear, login, renew
+// app.use('/api/auth', require('./routes/auth'));
+// // TODO: CRUD: Eventos
 
 // Ejemplo de cómo usar la conexión en una ruta
 app.get('/api/ejemplo', async (req, res) => {
@@ -32,7 +27,7 @@ app.get('/api/ejemplo', async (req, res) => {
 
 
 // Escuchar peticiones
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor corriendo en puerto ${process.env.PORT}`);
+app.listen(app.get('port'), () => {
+    console.log(`Servidor corriendo en puerto`, app.get('port'));
 });
 
