@@ -1,17 +1,18 @@
 import sql from 'mssql';
+import config from '../config';
 
 const dbSettings = {
-    user: 'admin',
-    password: 'perroshermanos',
-    server: 'dogsbrothersstore.cp02w6yq6pw9.us-east-2.rds.amazonaws.com',
-    database: 'DogsBrothersStore',
+    user: config.dbUser,
+    password: config.dbPassword,
+    server: config.dbServer,
+    database: config.dbDatabase,
     options: {
         encrypt: true,
         trustServerCertificate: true, // Establecer en true para desactivar la verificación del certificado
     },
 }
 
-async function getConnection() {
+export async function getConnection() {
     try {
         const pool = await sql.connect(dbSettings);
         console.log('Conexión establecida correctamente');
@@ -20,6 +21,6 @@ async function getConnection() {
         console.error('Error en la conexión:', error);
         throw error;
     }
-}
+};
 
-getConnection();
+export { sql };

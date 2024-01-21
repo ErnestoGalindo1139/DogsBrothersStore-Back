@@ -9,7 +9,12 @@ console.log(config);
 app.set('port', config.port);
 console.log(`puerto ${config.port}`);
 
+// middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.use(productsRoutes);
+
 
 export default app;
 
