@@ -18,17 +18,18 @@ export const getProducts = async (req, res) => {
 
 export const createNewProduct = async (req, res) => {
 
-    const { nombre_producto, descripcion, precio, id_categoria } = req.body;
-    let { cantidad } = req.body;
+    const { nombre_producto, descripcion_producto, precio_producto, url_producto, id_categoria } = req.body;
+    let { cantidad_producto } = req.body;
 
-    if (nombre_producto == null || descripcion == null || precio == null || id_categoria == null) {
+    if (nombre_producto == null || descripcion_producto == null || precio_producto == null || id_categoria == null || url_producto == null) {
         return res.status(400).json({msg: 'Bad Request. Llena todos los campos'});
     }
-
-    if (cantidad == null) {
-        cantidad = 0;
+    
+    if (cantidad_producto == null) {
+        cantidad_producto = 0;
     }
-
+    
+    console.log(req.body);
     try {
         
         const pool = await getConnection();
@@ -36,18 +37,20 @@ export const createNewProduct = async (req, res) => {
         await pool
             .request()
             .input("nombre_producto", sql.NVarChar, nombre_producto)
-            .input("descripcion", sql.NVarChar, descripcion)
-            .input("precio", sql.Decimal, precio)
-            .input("cantidad", sql.Int, cantidad)
-            .input("id_categoria", sql.Int, id_categoria)
+            .input("precio_producto", sql.Decimal, Number(precio_producto))
+            .input("cantidad_producto", sql.Int, Number(cantidad_producto))
+            .input("descripcion_producto", sql.NVarChar, descripcion_producto)
+            .input("id_categoria", sql.Int, Number(id_categoria))
+            .input("url_producto", sql.NVarChar, url_producto)
             .query(
                 queries.addNewProduct
             )
-        res.json({nombre_producto, descripcion, precio, cantidad, id_categoria});
+        console.log({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, url_producto, id_categoria});
 
     } catch (error) {
         res.status(500);
         res.send(error.message);
+        console.log(error.message);
     }
     
 
@@ -99,10 +102,11 @@ export const getTotalProducts = async (req, res) => {
 
 export const updateProductById = async (req, res) => {
 
-    const { nombre_producto, descripcion, cantidad, precio, id_categoria } = req.body;
+    const { nombre_producto, descripcion_producto, cantidad_producto, url_producto, precio_producto, id_categoria } = req.body;
     const { id_producto } = req.params;
+    console.log(id_producto);
 
-    if (nombre_producto == null || descripcion == null || precio == null || cantidad == null || id_categoria == null) {
+    if (nombre_producto == null || descripcion_producto == null || precio_producto == null || cantidad_producto == null || id_categoria == null) {
         return res.status(400).json({msg: 'Bad Request. Llena todos los campos'});
     }
 
@@ -111,17 +115,18 @@ export const updateProductById = async (req, res) => {
     const result = await pool
         .request()
         .input("nombre_producto", sql.NVarChar, nombre_producto)
-        .input("descripcion", sql.NVarChar, descripcion)
-        .input("precio", sql.Decimal, precio)
-        .input("cantidad", sql.Int, cantidad)
+        .input("descripcion_producto", sql.NVarChar, descripcion_producto)
+        .input("precio_producto", sql.Decimal, precio_producto)
+        .input("cantidad_producto", sql.Int, cantidad_producto)
         .input("id_categoria", sql.Int, id_categoria)
+        .input("url_producto", sql.NVarChar, url_producto)
         .input("id_producto", id_producto)
         .query(
             queries.updateProductById
         )
 
     console.log(result);
-    res.json({nombre_producto, descripcion, precio, cantidad, id_categoria});
+    res.json({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, id_categoria});
     
     
 };

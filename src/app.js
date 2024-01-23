@@ -5,6 +5,10 @@ import productsRoutes from './routes/products.routes'
 const app = express();
 console.log(config);
 
+// Habilitar CORS para todas las rutas
+const cors = require('cors');
+app.use(cors());
+
 // settings
 app.set('port', config.port);
 console.log(`puerto ${config.port}`);
