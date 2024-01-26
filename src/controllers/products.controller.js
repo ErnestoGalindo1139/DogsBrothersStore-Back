@@ -71,6 +71,32 @@ export const getProductById = async (req, res) => {
     res.send(result.recordset[0]);
 };
 
+export const getActiveProducts = async (req, res) => {
+
+    const pool = await getConnection();
+
+    const result = await pool
+        .request()
+        .query(
+            queries.getActiveProducts
+        )
+
+    res.send(result.recordset);
+};
+
+export const getInactiveProducts = async (req, res) => {
+
+    const pool = await getConnection();
+
+    const result = await pool
+        .request()
+        .query(
+            queries.getInactiveProducts
+        )
+
+    res.send(result.recordset);
+};
+
 export const deleteProductById = async (req, res) => {
     const { id_producto } = req.params;
 

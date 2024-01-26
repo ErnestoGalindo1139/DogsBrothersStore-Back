@@ -1,0 +1,14 @@
+@api = http://localhost:4000/users
+
+POST {{api}}
+Content-Type: application/json
+
+{
+    "nombre_completo": "Juan Carlos",
+    "apellido_paterno": "Rivas",
+    "apellido_materno": "Lugo",
+    "correo_electronico": "correo@correo.com",
+    "nombre_usuario": "Elmomo281",
+    "contrasena": "********",
+    "numero_celular": "6693282833"
+}

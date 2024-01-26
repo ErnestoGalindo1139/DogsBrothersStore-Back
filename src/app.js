@@ -2,6 +2,7 @@ import config from './config';
 import express from 'express';
 import productsRoutes from './routes/products.routes'
 import categoriesRoutes from './routes/categories.routes'
+import usersRoutes from './routes/users.routes'
 
 const app = express();
 console.log(config);
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(productsRoutes);
 app.use(categoriesRoutes);
+app.use(usersRoutes);
 
 
 export default app;
