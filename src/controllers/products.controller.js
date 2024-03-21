@@ -18,10 +18,10 @@ export const getProducts = async (req, res) => {
 
 export const createNewProduct = async (req, res) => {
 
-    const { nombre_producto, descripcion_producto, precio_producto, url_producto, id_categoria } = req.body;
+    const { nombre_producto, descripcion_producto, precio_producto, url_producto, folder_producto, id_categoria } = req.body;
     let { cantidad_producto } = req.body;
 
-    if (nombre_producto == null || descripcion_producto == null || precio_producto == null || id_categoria == null || url_producto == null) {
+    if (nombre_producto == null || descripcion_producto == null || precio_producto == null || id_categoria == null || url_producto == null || folder_producto == null ) {
         return res.status(400).json({msg: 'Bad Request. Llena todos los campos'});
     }
     
@@ -42,10 +42,11 @@ export const createNewProduct = async (req, res) => {
             .input("descripcion_producto", sql.NVarChar, descripcion_producto)
             .input("id_categoria", sql.Int, Number(id_categoria))
             .input("url_producto", sql.NVarChar, url_producto)
+            .input("folder_producto", sql.NVarChar, folder_producto)
             .query(
                 queries.addNewProduct
             )
-        console.log({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, url_producto, id_categoria});
+        console.log({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, url_producto, id_categoria, folder_producto});
 
     } catch (error) {
         res.status(500);

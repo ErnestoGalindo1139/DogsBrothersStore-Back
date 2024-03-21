@@ -5,10 +5,10 @@ export const queries = {
     // Products
     getAllProducts: `SELECT *, ${nombreCategorias} FROM productos`,
     getProductById: "SELECT * FROM productos WHERE id_producto = @id_producto",
-    getTotalProducts: "SELECT COUNT(*) FROM productos",
+    getTotalProducts: "SELECT COUNT(*) total FROM productos",
     getActiveProducts: `SELECT *, ${nombreCategorias} FROM productos WHERE activo_producto = 1`,
     getInactiveProducts: `SELECT *, ${nombreCategorias} FROM productos WHERE activo_producto = 0`,
-    addNewProduct: "INSERT INTO productos (nombre_producto, descripcion_producto, precio_producto, cantidad_producto, url_producto, id_categoria) VALUES (@nombre_producto, @descripcion_producto, @precio_producto, @cantidad_producto, @url_producto, @id_categoria)",
+    addNewProduct: "INSERT INTO productos (nombre_producto, descripcion_producto, precio_producto, cantidad_producto, url_producto, id_categoria, folder_producto) VALUES (@nombre_producto, @descripcion_producto, @precio_producto, @cantidad_producto, @url_producto, @id_categoria, @folder_producto)",
     deleteProduct: "DELETE FROM productos WHERE id_producto = @id_producto",
     updateProductById: "UPDATE productos SET nombre_producto = @nombre_producto, descripcion_producto = @descripcion_producto, precio_producto = @precio_producto, cantidad_producto = @cantidad_producto, url_producto = @url_producto, id_categoria = @id_categoria WHERE id_producto = @id_producto",
     

@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/products', getProducts);
 router.get('/products/:id_producto', getProductById);
-router.get('/a', getTotalProducts);
+router.get('/total-products', getTotalProducts);
 router.get('/active-products', getActiveProducts);
 router.get('/inactive-products', getInactiveProducts);
 router.post('/products', createNewProduct);
