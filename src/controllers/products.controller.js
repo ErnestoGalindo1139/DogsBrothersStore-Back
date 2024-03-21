@@ -156,3 +156,29 @@ export const updateProductById = async (req, res) => {
     
     
 };
+
+export const addProductoCarritoCompras = async (req, res) => {
+    const pool = await getConnection();
+
+    const result = await pool
+        .request()
+        .query(
+            queries.getCarritoCompras
+        )
+
+    console.log(result);
+    res.json(result.recordset);
+}
+
+export const getCarritoCompras = async (req, res) => {
+    const pool = await getConnection();
+
+    const result = await pool
+        .request()
+        .query(
+            queries.getCarritoCompras
+        )
+
+    console.log(result);
+    res.json(result.recordset);
+}
