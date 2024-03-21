@@ -19,4 +19,8 @@ export const queries = {
     addNewUser: "INSERT INTO usuarios (nombre_completo, apellido_paterno, apellido_materno, correo_electronico, nombre_usuario, contrasena, numero_celular) VALUES (@nombre_completo, @apellido_paterno, @apellido_materno, @correo_electronico, @nombre_usuario, @contrasena, @numero_celular)",
     getAllUsers: "SELECT * FROM usuarios",
     getUserByEmail: "SELECT * FROM usuarios WHERE correo_electronico = @correo_electronico",
+
+    // Carrito de Compras
+    addProductoCarritoCompras: '',
+    getCarritoCompras: '',
 }
