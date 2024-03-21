@@ -1,16 +1,18 @@
-import { getConnection, queries, sql } from "../database"
+import { getConnection, queries } from "../database"
 
 export const getCategories = async (req, res) => {
-
     try {
+        // Obtener la conexión
+        const connection = await getConnection();
         
-        const pool = await getConnection();
-        const result = await pool.request().query(queries.getAllCategories); 
-        res.json(result.recordset);
+        // Ejecutar la consulta
+        const [rows, fields] = await connection.execute(queries.getAllCategories);
+        
+        res.json(rows);
         
     } catch (error) {
-        res.status(500);
-        res.send(error.message);
+        console.error('Error al ejecutar la consulta:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 
 

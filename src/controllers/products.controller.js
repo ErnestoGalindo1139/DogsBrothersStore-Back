@@ -1,16 +1,19 @@
-import { getConnection, queries, sql } from "../database"
+import { getConnection, queries, mysql } from "../database"
 
 export const getProducts = async (req, res) => {
 
     try {
+        // Obtener la conexión
+        const connection = await getConnection();
         
-        const pool = await getConnection();
-        const result = await pool.request().query(queries.getAllProducts); 
-        res.json(result.recordset);
+        // Ejecutar la consulta
+        const [rows, fields] = await connection.execute(queries.getAllProducts);
         
+        // Enviar los resultados como respuesta
+        res.json(rows);
     } catch (error) {
-        res.status(500);
-        res.send(error.message);
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 
 
@@ -32,25 +35,22 @@ export const createNewProduct = async (req, res) => {
     console.log(req.body);
     try {
         
-        const pool = await getConnection();
+        // Obtener la conexión
+        const connection = await getConnection();
 
-        await pool
-            .request()
-            .input("nombre_producto", sql.NVarChar, nombre_producto)
-            .input("precio_producto", sql.Decimal, Number(precio_producto))
-            .input("cantidad_producto", sql.Int, Number(cantidad_producto))
-            .input("descripcion_producto", sql.NVarChar, descripcion_producto)
-            .input("id_categoria", sql.Int, Number(id_categoria))
-            .input("url_producto", sql.NVarChar, url_producto)
-            .query(
-                queries.addNewProduct
-            )
-        console.log({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, url_producto, id_categoria});
+        // Ejecutar la consulta para insertar un nuevo producto
+        await connection.execute(
+            queries.addNewProduct,
+            [nombre_producto, descripcion_producto, precio_producto, cantidad_producto, id_categoria, url_producto]
+        );
+
+        console.log({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, id_categoria, url_producto});
+        
+        res.status(201).json({msg: 'Producto creado exitosamente'});
 
     } catch (error) {
-        res.status(500);
-        res.send(error.message);
-        console.log(error.message);
+        console.error('Error al crear nuevo producto:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
     
 
@@ -59,126 +59,156 @@ export const createNewProduct = async (req, res) => {
 export const getProductById = async (req, res) => {
     const { id_producto } = req.params;
 
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .input("id_producto", id_producto)
-        .query(
-            queries.getProductById
-        )
+        // Ejecutar la consulta para obtener el producto por su ID
+        const [rows, fields] = await connection.execute(
+            queries.getProductById,
+            [id_producto]
+        );
 
-    res.send(result.recordset[0]);
+        // Enviar el resultado como respuesta
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Error al obtener producto por ID:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
 
 export const getActiveProducts = async (req, res) => {
 
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .query(
+        // Ejecutar la consulta para obtener los productos activos
+        const [rows, fields] = await connection.execute(
             queries.getActiveProducts
-        )
+        );
 
-    res.send(result.recordset);
+        // Enviar los resultados como respuesta
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener productos activos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
 
 export const getInactiveProducts = async (req, res) => {
 
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .query(
+        // Ejecutar la consulta para obtener los productos inactivos
+        const [rows, fields] = await connection.execute(
             queries.getInactiveProducts
-        )
+        );
 
-    res.send(result.recordset);
+        // Enviar los resultados como respuesta
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener productos inactivos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
 
 export const deleteProductById = async (req, res) => {
     const { id_producto } = req.params;
 
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .input("id_producto", id_producto)
-        .query(
-            queries.deleteProduct
-        )
+        // Ejecutar la consulta para eliminar el producto por su ID
+        await connection.execute(
+            queries.deleteProduct,
+            [id_producto]
+        );
 
-    res.sendStatus(204);
+        res.sendStatus(204);
+    } catch (error) {
+        console.error('Error al eliminar producto por ID:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
 
 export const getTotalProducts = async (req, res) => {
 
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .query(
+        // Ejecutar la consulta para obtener el total de productos
+        const [rows, fields] = await connection.execute(
             queries.getTotalProducts
-        )
+        );
 
-    console.log(result);
-    res.json(result.recordset);
+        // Enviar los resultados como respuesta
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener el total de productos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
 
 export const updateProductById = async (req, res) => {
 
     const { nombre_producto, descripcion_producto, cantidad_producto, url_producto, precio_producto, id_categoria } = req.body;
     const { id_producto } = req.params;
-    console.log(id_producto);
 
-    if (nombre_producto == null || descripcion_producto == null || precio_producto == null || cantidad_producto == null || id_categoria == null) {
-        return res.status(400).json({msg: 'Bad Request. Llena todos los campos'});
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
+
+        // Ejecutar la consulta para actualizar el producto por su ID
+        await connection.execute(
+            queries.updateProductById,
+            [nombre_producto, descripcion_producto, precio_producto, cantidad_producto, id_categoria, url_producto, id_producto]
+        );
+
+        res.json({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, id_categoria});
+    } catch (error) {
+        console.error('Error al actualizar producto por ID:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
-
-    const pool = await getConnection();
-
-    const result = await pool
-        .request()
-        .input("nombre_producto", sql.NVarChar, nombre_producto)
-        .input("descripcion_producto", sql.NVarChar, descripcion_producto)
-        .input("precio_producto", sql.Decimal, precio_producto)
-        .input("cantidad_producto", sql.Int, cantidad_producto)
-        .input("id_categoria", sql.Int, id_categoria)
-        .input("url_producto", sql.NVarChar, url_producto)
-        .input("id_producto", id_producto)
-        .query(
-            queries.updateProductById
-        )
-
-    console.log(result);
-    res.json({nombre_producto, descripcion_producto, precio_producto, cantidad_producto, id_categoria});
-    
     
 };
 
 export const addProductoCarritoCompras = async (req, res) => {
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .query(
+        // Ejecutar la consulta para obtener el carrito de compras
+        const [rows, fields] = await connection.execute(
             queries.getCarritoCompras
-        )
+        );
 
-    console.log(result);
-    res.json(result.recordset);
+        // Enviar los resultados como respuesta
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener el carrito de compras:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 }
 
 export const getCarritoCompras = async (req, res) => {
-    const pool = await getConnection();
+    try {
+        // Obtener la conexión
+        const connection = await getConnection();
 
-    const result = await pool
-        .request()
-        .query(
+        // Ejecutar la consulta para obtener el carrito de compras
+        const [rows, fields] = await connection.execute(
             queries.getCarritoCompras
-        )
+        );
 
-    console.log(result);
-    res.json(result.recordset);
+        // Enviar los resultados como respuesta
+        res.json(rows);
+    } catch (error) {
+        console.error('Error al obtener el carrito de compras:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 }

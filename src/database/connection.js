@@ -1,26 +1,23 @@
-import sql from 'mssql';
+import mysql from 'mysql2/promise'; // Importa mysql2 en su modo promesa
 import config from '../config';
 
 const dbSettings = {
     user: config.dbUser,
     password: config.dbPassword,
-    server: config.dbServer,
+    host: config.dbServer,
     database: config.dbDatabase,
-    options: {
-        encrypt: true,
-        trustServerCertificate: true, // Establecer en true para desactivar la verificación del certificado
-    },
 }
 
 export async function getConnection() {
+
     try {
-        const pool = await sql.connect(dbSettings);
+        const connection = await mysql.createConnection(dbSettings);
         console.log('Conexión establecida correctamente');
-        return pool;
+        return connection;
     } catch (error) {
         console.error('Error en la conexión:', error);
         throw error;
     }
 };
 
-export { sql };
+export { mysql };
